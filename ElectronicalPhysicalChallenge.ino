@@ -6,14 +6,17 @@
 #define ARRAY_SIZE(x) ((sizeof x) / (sizeof *x))
 #define RANDOM(min, max) min + rand() / (RAND_MAX / (max - min + 1) + 1)
 
-//Global Variables
-void IR();
+//function declarations
+void setIR();
 int readIR();
-int makeSound();
+void readRoom();
+void setRandomNeoPixels();
+
+//global variables
 int ROOM_DEFAULT = 0;
 int IR_res;
 int neoPixelsParity = 0;
-int NOTES [8] = {261, 293, 329, 349, 391, 440, 493, 523};
+int NOTES [8] = {261, 293, 329, 349, 391, 440, 493, 523}; // C-D-E-F-G-A-B-C
 
 // the next two functions are modifications of proximity library adapted to the projects needs
 void setIR(){
@@ -26,21 +29,6 @@ void setIR(){
   delay(50);
   readRoom();
 }
-
-void readRoom(){
-  /**
-   * Reads room initial IR state (assuming user isn't messing aroudn with room lighting while playing)
-   */
-  digitalWrite(25, HIGH);
-  delay(10);
-  //Get reading
-  int IR = analogRead(A8);
-  //Turn off IR LED
-  digitalWrite(25, LOW);
-  delay(50);
-  ROOM_DEFAULT = IR;
-}
-
 
 int readIR(){
   /**
@@ -62,6 +50,20 @@ int readIR(){
     IR = 0;
   }
   return IR;
+}
+
+void readRoom(){
+  /**
+   * Reads room initial IR state (assuming user isn't messing aroudn with room lighting while playing)
+   */
+  digitalWrite(25, HIGH);
+  delay(10);
+  //Get reading
+  int IR = analogRead(A8);
+  //Turn off IR LED
+  digitalWrite(25, LOW);
+  delay(50);
+  ROOM_DEFAULT = IR;
 }
 
 void setRandomNeoPixels(int parity){
