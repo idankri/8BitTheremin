@@ -4,7 +4,7 @@
 
 //Macros
 #define ARRAY_SIZE(x) ((sizeof x) / (sizeof *x))
-#define RANDOM(min, max) min + rand() / (RAND_MAX / (max - min + 1) + 1)
+#define RANDOM(low, high) low + rand() / (RAND_MAX / (high - low + 1) + 1)
 
 //function declarations
 void setIR();
@@ -17,6 +17,8 @@ int ROOM_DEFAULT = 0;
 int IR_res;
 int neoPixelsParity = 0;
 int NOTES [8] = {261, 293, 329, 349, 391, 440, 493, 523}; // C-D-E-F-G-A-B-C
+bool leftButtonDown = false;
+int tempo = 20;
 
 // the next two functions are modifications of proximity library adapted to the projects needs
 void setIR(){
@@ -83,13 +85,26 @@ void setup() {
   Serial.begin(19200);
   setIR();
   CircuitPlayground.clearPixels();
+}
 
+void getNewTempo(){
+  /**
+   * The next function is used to make the left button to be used as tap delay. 
+   * It's a hack since most standard time counting libraries in C have collisions with Adafruit Circuit Playground header for some reason
+   */
+  int count = 0;
+  while(CircuitPlayground.leftButton()){
+    delay(1);
+    ++count;
+  }
+  Serial.println(count);
+  tempo = count / 10;
 }
 
 void loop() {
   IR_res = readIR();
   // prints IR reading for debugging purposes
-  Serial.println(IR_res);
+  //Serial.println(IR_res);
   //every iteration of the loop neoPixelsParity will be 0 or 1
   neoPixelsParity = (neoPixelsParity + 1) % 2;
   // play random lights and play tone according to reading
@@ -97,7 +112,12 @@ void loop() {
   CircuitPlayground.playTone(NOTES[IR_res], 100);
   //clear pixels and have some delay for robustness purposes
   CircuitPlayground.clearPixels();
-  delay(20);
-  
-
+  // The next form of loop makes button functionality more responsive
+  for(int i = 0; i < tempo; i++){
+    delay(1);
+    if(CircuitPlayground.leftButton()){
+      getNewTempo();
+      break;
+    }
+  }
 }
