@@ -1,13 +1,19 @@
 /**
- * @author: Idan Kringel and Noy
- * The next project is an 8 bit Theremin.
+ * @author: Idan Kringel
+ * 8-Bit Theremin
+ * 
+ * The next project is a Theremin that plays 8-Bit like music in various scales and tempos using Adafruit Circuit Playground Express microprocessor.
  * The instrument detects IR retransmission intensity (the threshold intensity is set by the room but usually works better with lights off),
  *  and plays a note according to that intensity - meaning that the closer your hand the higher the note played.
  * The instrument plays notes in a rapid pace, set by tempo variable, and the tempo can be changed pressing the left button - long press yields slower tempo and
- *   fast press yields faster tempo
+ *   short press yields faster tempo
  * Also, the right button can change the mode of the notes (Modus) - the instrument initially plays C Major scale, and each press switches to C in the next mode -  
  *   Dorian - Phrygian - Lydian - Mixolydian - Aeolian (Minor) - Locrian - and back to Ionian\Major
- * Video Link - <TODO: UPLOAD VIDEO LINK>
+ *   
+ * The Circuit:
+ * Adafruit Circuit Playground Express only :)
+ * 
+ * Video Link - https://www.youtube.com/watch?v=ExWx5Vve3Bc
  */
 
 //Imports
@@ -78,7 +84,7 @@ int readIR(){
 
 void readRoom(){
   /**
-   * Reads room initial IR state (assuming user isn't messing aroudn with room lighting while playing)
+   * Reads room initial IR state (assuming user isn't messing around with room lighting while playing)
    */
   digitalWrite(25, HIGH);
   delay(10);
